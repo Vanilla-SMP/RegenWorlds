@@ -40,6 +40,8 @@ If the frame is valid, the plugin will fill the interior with a portal.
 
 ### 3) Enter the void portal 🚪
 
+![alt text](world.png)
+
 Walk into any of the portal blocks and:
 
 - You will be teleported into a linked void world
