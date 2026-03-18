@@ -2,6 +2,7 @@ package com.regenworlds;
 
 import com.regenworlds.command.RegenWorldsCommand;
 import com.regenworlds.discord.DiscordNotifier;
+import com.regenworlds.lang.LangManager;
 import com.regenworlds.listener.PortalActivateListener;
 import com.regenworlds.listener.PortalListener;
 import com.regenworlds.model.VoidWorldType;
@@ -29,6 +30,9 @@ public class RegenWorldsPlugin extends JavaPlugin {
         VoidWorldManager worldManager = new VoidWorldManager(this, overworldName, netherName, endName);
         ReturnLocationStore returnStore = new ReturnLocationStore(this);
 
+        String defaultLang = getConfig().getString("language", "en");
+        LangManager lang = new LangManager(this, defaultLang);
+
         discord = new DiscordNotifier(this);
         discord.start(
                 getConfig().getString("discord.token", ""),
@@ -44,11 +48,10 @@ public class RegenWorldsPlugin extends JavaPlugin {
             worldManager.regenerateVoidWorld(type);
         }
 
-        PortalListener portalListener = new PortalListener(this, worldManager, returnStore);
-        getServer().getPluginManager().registerEvents(portalListener, this);
+        getServer().getPluginManager().registerEvents(new PortalListener(this, worldManager, returnStore, lang), this);
         getServer().getPluginManager().registerEvents(new PortalActivateListener(), this);
 
-        getCommand("regenworlds").setExecutor(new RegenWorldsCommand(regenScheduler));
+        getCommand("regenworlds").setExecutor(new RegenWorldsCommand(regenScheduler, lang));
 
         getLogger().info("RegenWorlds enabled.");
     }

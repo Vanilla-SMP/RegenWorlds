@@ -1,5 +1,6 @@
 package com.regenworlds.listener;
 
+import com.regenworlds.lang.LangManager;
 import com.regenworlds.model.PlayerReturn;
 import com.regenworlds.model.VoidWorldType;
 import com.regenworlds.service.PortalFrameBuilder;
@@ -24,14 +25,16 @@ public class PortalListener implements Listener {
     private final JavaPlugin plugin;
     private final VoidWorldManager worldManager;
     private final ReturnLocationStore returnStore;
+    private final LangManager lang;
     private final Set<UUID> teleporting = new HashSet<>();
 
     private static final Set<String> VOID_WORLD_NAMES = new HashSet<>();
 
-    public PortalListener(JavaPlugin plugin, VoidWorldManager worldManager, ReturnLocationStore returnStore) {
+    public PortalListener(JavaPlugin plugin, VoidWorldManager worldManager, ReturnLocationStore returnStore, LangManager lang) {
         this.plugin = plugin;
         this.worldManager = worldManager;
         this.returnStore = returnStore;
+        this.lang = lang;
     }
 
     public static void registerVoidWorld(String name) {
@@ -69,15 +72,14 @@ public class PortalListener implements Listener {
         if (!VOID_WORLD_NAMES.contains(event.getBlock().getWorld().getName())) return;
         if (isProtectedBlock(event.getBlock())) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage("§c[RegenWorlds] §fЭтот портал неуничтожим.");
+            event.getPlayer().sendMessage(lang.get(event.getPlayer(), "portal_indestructible"));
         }
     }
 
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event) {
-        if (VOID_WORLD_NAMES.contains(event.getBlock().getWorld().getName()) && isProtectedBlock(event.getBlock())) {
+        if (VOID_WORLD_NAMES.contains(event.getBlock().getWorld().getName()) && isProtectedBlock(event.getBlock()))
             event.setCancelled(true);
-        }
     }
 
     @EventHandler
@@ -93,24 +95,18 @@ public class PortalListener implements Listener {
     }
 
     private boolean isProtectedBlock(Block block) {
-        World world = block.getWorld();
-        Location origin = worldManager.getPortalOrigin(world);
+        Location origin = worldManager.getPortalOrigin(block.getWorld());
         return PortalFrameBuilder.isProtectedPortalBlock(block, origin);
     }
 
     private Block findNearbyPortalBlock(Player player) {
         Location loc = player.getLocation();
-        for (int dy = -1; dy <= 2; dy++) {
-            for (int dx = -1; dx <= 1; dx++) {
+        for (int dy = -1; dy <= 2; dy++)
+            for (int dx = -1; dx <= 1; dx++)
                 for (int dz = -1; dz <= 1; dz++) {
-                    Block block = loc.getWorld().getBlockAt(
-                            loc.getBlockX() + dx,
-                            loc.getBlockY() + dy,
-                            loc.getBlockZ() + dz);
+                    Block block = loc.getWorld().getBlockAt(loc.getBlockX() + dx, loc.getBlockY() + dy, loc.getBlockZ() + dz);
                     if (block.getType() == Material.NETHER_PORTAL) return block;
                 }
-            }
-        }
         return null;
     }
 
@@ -119,25 +115,21 @@ public class PortalListener implements Listener {
         teleporting.add(uid);
 
         Location from = player.getLocation().clone();
-        returnStore.set(uid, new PlayerReturn(
-                from.getWorld().getName(),
-                from.getX(), from.getY(), from.getZ(),
-                from.getYaw(), from.getPitch()));
+        returnStore.set(uid, new PlayerReturn(from.getWorld().getName(), from.getX(), from.getY(), from.getZ(), from.getYaw(), from.getPitch()));
 
         VoidWorldType type = VoidWorldType.fromWorld(player.getWorld());
         World voidWorld = worldManager.getOrCreateVoidWorld(type);
 
         if (voidWorld == null) {
-            player.sendMessage("§c[RegenWorlds] §fОшибка загрузки void мира.");
+            player.sendMessage(lang.get(player, "void_world_error"));
             teleporting.remove(uid);
             return;
         }
 
         Location dest = worldManager.getPortalTeleportLocation(voidWorld, from.getYaw(), from.getPitch());
-
         plugin.getServer().getScheduler().runTask(plugin, () -> {
             player.teleport(dest);
-            player.sendMessage("§b[RegenWorlds] §fВы вошли в void мир.");
+            player.sendMessage(lang.get(player, "entered_void"));
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> teleporting.remove(uid), 40L);
         });
     }
@@ -151,7 +143,7 @@ public class PortalListener implements Listener {
             World overworld = Bukkit.getWorlds().get(0);
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 player.teleport(overworld.getSpawnLocation());
-                player.sendMessage("§e[RegenWorlds] §fТочка возврата не найдена. Перемещены на спавн.");
+                player.sendMessage(lang.get(player, "no_return_point"));
                 plugin.getServer().getScheduler().runTaskLater(plugin, () -> teleporting.remove(uid), 40L);
             });
             return;
@@ -165,7 +157,7 @@ public class PortalListener implements Listener {
         plugin.getServer().getScheduler().runTask(plugin, () -> {
             player.teleport(dest);
             returnStore.remove(uid);
-            player.sendMessage("§b[RegenWorlds] §fВы вернулись.");
+            player.sendMessage(lang.get(player, "returned"));
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> teleporting.remove(uid), 40L);
         });
     }

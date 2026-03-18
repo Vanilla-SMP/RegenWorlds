@@ -2,12 +2,16 @@
 
 > **Want to see it live?** Join our Minecraft server and Discord community — **[discord.gg/UbbNPUJkCV](https://discord.gg/UbbNPUJkCV)**
 
+![alt text](Minecraft-Logo-Vsmp.png)
+
 Welcome to **RegenWorlds** — your gateway to fresh, random void worlds in Minecraft!
 Step into a special portal, explore a clean and empty dimension, then jump back to where you came from.
 
 ## What is this plugin? 🌀
 
 `RegenWorlds` adds special **Crying Obsidian portals** that can:
+
+![alt text](preview.png)
 
 - Send you to a corresponding **void world** (Overworld / Nether / The End version)
 - Keep your exact return point so you can come back safely
