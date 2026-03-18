@@ -99,6 +99,8 @@ Have fun, experiment with fast travel layouts, and enjoy the chaos of clean void
 
 This plugin runs on our public Minecraft server. Come test it yourself, report bugs, or just have fun!
 
+**👥 IP: `93.183.82.67`** — Java & Bedrock 1.21.11, connect directly without mods
+
 **[Join our Discord → discord.gg/UbbNPUJkCV](https://discord.gg/UbbNPUJkCV)**
 
 ---
