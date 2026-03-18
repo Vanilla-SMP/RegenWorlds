@@ -1,0 +1,14 @@
+name: RegenWorlds
+version: 1.0.0
+main: com.regenworlds.RegenWorldsPlugin
+api-version: '1.21'
+description: Custom portals to regenerating void worlds
+commands:
+  regenworlds:
+    description: RegenWorlds admin command
+    usage: /regenworlds <status|regen>
+    permission: regenworlds.admin
+permissions:
+  regenworlds.admin:
+    description: Admin access to RegenWorlds
+    default: op

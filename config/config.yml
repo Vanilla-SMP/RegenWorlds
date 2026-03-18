@@ -1,0 +1,17 @@
+discord:
+  token: "MTQ3NDAwNDc3ODk1MzQ3NDIwOA.Gg3nYT.R3PmEpewkHrpsjDe5kgfdJEuT1cNGDkzvQaGdE"
+  channel_id: "1473994286847754465"
+
+
+worlds:
+  overworld_void: "void_overworld"
+  nether_void: "void_nether"
+  end_void: "void_end"
+
+regen:
+  min_hours: 24
+  max_hours: 48
+
+portal:
+  size_width: 2
+  size_height: 3

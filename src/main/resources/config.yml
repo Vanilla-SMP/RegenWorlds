@@ -1,0 +1,16 @@
+discord:
+  token: "YOUR_BOT_TOKEN_HERE"
+  channel_id: "YOUR_CHANNEL_ID_HERE"
+
+worlds:
+  overworld_void: "void_overworld"
+  nether_void: "void_nether"
+  end_void: "void_end"
+
+regen:
+  min_hours: 24
+  max_hours: 48
+
+portal:
+  size_width: 2
+  size_height: 3
